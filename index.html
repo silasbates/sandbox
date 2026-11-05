@@ -1,11 +1,18 @@
  <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
     <style>
+        html,
         body {
             margin: 0;
             overflow: hidden;
             background-color: black;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: none;
         }
 		div {
             border: 0px solid #ddd;
@@ -47,6 +54,7 @@
         }
         canvas {
             display: block;
+            touch-action: none;
         } 
         button {
   flex: 1;
@@ -310,7 +318,11 @@ makeLine(5, canvas.height - 5, canvas.width - 5, canvas.height - 5)
     let rectY = null
     let ropeX = null
     let ropeY = null
-    	document.addEventListener('mousedown', (event) => {
+    let activePointerId = null;
+    canvas.addEventListener('pointerdown', (event) => {
+    if (!event.isPrimary || event.button !== 0) return;
+    activePointerId = event.pointerId;
+    canvas.setPointerCapture(event.pointerId);
     //if (running) return;
     const rect = canvas.getBoundingClientRect();
     const mouseX = event.clientX - rect.left;
@@ -355,7 +367,9 @@ function run() {
 	running =  !running
     
 }	
-document.addEventListener('mouseup', (event) => {
+document.addEventListener('pointerup', (event) => {
+    if (event.pointerId !== activePointerId) return;
+    activePointerId = null;
     const rect = canvas.getBoundingClientRect();
     const mouseUpX = event.clientX - rect.left;
     const mouseUpY = event.clientY - rect.top;
@@ -402,6 +416,12 @@ document.addEventListener('mouseup', (event) => {
     }
     selected = null;
 });
+canvas.addEventListener('pointercancel', (event) => {
+    if (event.pointerId !== activePointerId) return;
+    activePointerId = null;
+    selected = null;
+});
+document.addEventListener('contextmenu', (event) => event.preventDefault());
 
 
 
@@ -1395,8 +1415,6 @@ friction: 1, restitution: 0, springSnap: 5, stiffness: 0.99999, gravity: 0.2,
     </script>
 </body> 
 </html>
-
-
 
 
 
