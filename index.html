@@ -1,23 +1,58 @@
  <!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
     <style>
-        html,
+    .action-footer {
+  pointer-events: auto;
+  align-self: center;
+  margin-bottom: 10px;
+}
+
+
+.action-footer {
+  margin-top: auto;
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  justify-content: center;
+  
+}
+    .container {
+  position: relative;
+  display: inline-block; /* or fit-content / fixed dimensions matching the canvas */
+  width: 100%;
+  color: white;
+  height 100%;
+}
+
+canvas {
+  display: block;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* Optional: pointer-events: none; if you want mouse clicks to pass through to the canvas */
+}
+
+  input[type="checkbox"] {
+    display: none !important;
+  }
+
         body {
             margin: 0;
             overflow: hidden;
             background-color: black;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-            touch-action: none;
         }
-		div {
+		#topDiv {
+        	width 100%;f
             border: 0px solid #ddd;
         	border-radius: px;
             color: white;
+            //height: 60px;
         
         	background: black;
         }
@@ -37,7 +72,7 @@
         
         	
         }
-        #fullscrean {
+       /* #fullscrean {
         	width: 30px;
             height: 30px;
             border: 3px solid #ddd;
@@ -47,24 +82,23 @@
     align-items: center;
         
         	
-        }
+        }*/
         .selected {
         	
             border: 3px solid blue;
         }
         canvas {
             display: block;
-            touch-action: none;
         } 
         button {
   flex: 1;
-  max-width: 180px;
+  max-width: 130px;
   background: rgba(255, 255, 255, 0.1);
   color: #eee;
   border: none;
   padding: 16px 12px;
   cursor: pointer;
-  font-size: 1.2rem;
+  font-size: 1rem;
   text-transform: lowercase;
   border-radius: 8px;
   display: inline-flex;
@@ -74,6 +108,7 @@
   white-space: normal;
   overflow: visible;
   text-overflow: clip;
+  height: 50px;
 }
 
 #conrolCenter > button {
@@ -134,9 +169,9 @@ button.active {
   padding: 12px;    
 }
  button {
-        	width: 8%;
+        	width: 7%;
             border: 0px solid #ddd;
-        	border-radius: px;
+        	border-radius: 10px;
 margin: 0.5px;
         
         	
@@ -170,6 +205,37 @@ input[type="checkbox"] {
   cursor: pointer !important;
 }
 
+#elements {
+	
+  justify-content: center;
+  width: 100%;
+  
+}
+
+
+.elementBtn {
+
+  justify-self: center !important;
+	margin: 30px;
+    width: 60px;
+    
+}
+
+#elementTitle {
+	
+    font-size: 3rem;
+  justify-self: center;
+}
+#elementName {
+	
+    font-size: 2rem;
+  justify-self: center;
+}
+
+#elBtn {
+	
+  background: rgba(0, 0, 255, 0.35);
+}
     </style>
 </head>
 <body>
@@ -177,24 +243,23 @@ input[type="checkbox"] {
 
 
 
-	<div>
+	<div id='topDiv'>
     <input type="number" id="x-vel" value="0" class='gone'>
 	
 	
     
 	<input type="number" id="y-vel" value="0" class='gone'>
     
-    <label >
-  <input id="autoMakeLines" type="checkbox" checked="checked" class='gone'>
   
+  
+  
+  <button id='elBtn' class="drawing" onclick="openElements()">Elements</button>
+  <button id='gravityBtn'class="drawing" onclick="toggleGravity(this)">Gravity On</button>
+  
+  
+  <!--<button id='gravityBtn'class="drawing" onclick="toggleSnap(this)">Break On</button>-->
   <span class="slider round"></span>
   </label>
-  <label>gravity</label>
-  <input id="gravity" type="checkbox" checked="checked">
-  <span class="slider round"></span>
-  </label>
-  <label>snap</label>
-  <input id="snap" type="checkbox" checked="checked">
   <span class="slider round"></span>
   </label>
   
@@ -210,16 +275,61 @@ input[type="checkbox"] {
     <button class="drawing" onclick="drawing('spring', this)">spring</button>
     <button class="drawing" onclick="drawing('line', this)">line</button>
     <button class="drawing" onclick="drawing('block', this, 'gap', 20, 100)">block</button>
-    <button class="drawing" onclick="drawing('anchor', this, 'radias',  5,  15)">anchor</button>
+    
     <button class="drawing" onclick="drawing('hydrolic', this)">hydrolic</button>
     <button class="drawing" onclick="drawing('rope', this, 'gap', 15, 100)">rope</button>
      <label id="sliderLabel">radius:</label>
   <input type="range" min="5" max="30" value="7" class="slider" id="slider">
+  
+          <!--<input id="customCarColor" type="color" value="#ff0000" oninput="changeBallColor(this.value)">-->
      <div id="drawingBtns">
   	
     </div>
     </div>
+    
+    <div class="container">
+  
     <canvas id="myCanvas"></canvas>
+    <div id='elements' ;>
+    
+    
+    
+    
+    
+ 		 <div class="overlay">
+         <h1 id='elementTitle'>Elements:</h1>
+         
+         <h3 id='elementName'>Jello</h3>
+  			<button  class='elementBtn'  onclick="selectElement('jello')">Jello</button>
+            
+  			<button  class='elementBtn'  onclick="selectElement('particle')">particle</button>
+            
+  			<button  class='elementBtn'  onclick="selectElement('anchor')">anchor</button>
+  	
+    <button  class='elementBtn'  onclick="selectElement('fire')">fire</button>
+  	
+     <button  class='elementBtn'  onclick="selectElement('magnet')">magnet</button>
+     
+       	
+     <button  class='elementBtn'  onclick="selectElement('bomb')">Bomb</button>
+  	
+        
+          	<div class="action-footer">
+          <button class="back-btn" onclick="openElements()">Back</button>
+          
+          
+          
+          
+        </div>
+        
+        
+        
+        
+        
+  </div>
+  </div>
+</div>
+
 
 
 
@@ -229,19 +339,83 @@ input[type="checkbox"] {
 
 
     <script>
+    
+    let inEl = false
+    let elements = [
+    
+    {name: "jello", anchor: false, stiffness: 0.2, connect: true, colors: ["rgba(255, 0, 0, 1)"], snapAt: 2, damping: 0.05, sType: 1, restitution: 0.99}, 
+    
+    
+    
+    {name: 'particle', anchor: false, stiffness: 0.5, connect: false, 
+    colors: ["orange", "blue", 'teal', 'yellow'], snapAt: 2, damping: 0.05, sType: 1, restitution: 1},
+    
+    
+    {name: 'anchor', anchor: true, stiffness: 0.9, 
+    connect: false, 
+    colors: ["#c00", "red"], snapAt: 2, damping: 0.05, sType: 1, restitution: 0.99},
+    
+     {name: "metal", anchor: false, stiffness: 0.2, connect: true, colors: ["rgba(255, 0, 0, 1)"], snapAt: 2, damping: 0.05, sType: 1, restitution: 0.99}, 
+     
+      {name: "fire", anchor: false, stiffness: 0.4, connect: false, colors: ["yellow", 'orange', 'red'], snapAt: 2, damping: 0.05, sType: 1, restitution: 0.99}, 
+      
+      {name: "magnet", anchor: false, stiffness: 0.4, connect: false, colors: ["gray", '#999', '#555'], snapAt: 2, damping: 0.05, sType: 1, restitution: 0.7}, 
+      
+      
+      {name: "bomb", anchor: false, stiffness: 5, connect: true, colors: ["white", '#333', '#222'], snapAt: 2, damping: 0.05, sType: 2, restitution: 0.7}, 
+    ]
+    
+    let e = elements[0]
+    
+    
+      
+    
+	const elementDiv = document.getElementById("elements");
+    const elementName = document.getElementById("elementName");
+    
+    function selectElement(name) {
+  	elementName.textContent = name;
+    for (element of elements) {
+    	if (element.name === name ) {
+        	e = element
+        }
+    }
+    openElements()
+  	
+  
+}
+    
+    
+    openElements() 
+    
+    function openElements() {
+  
+  if (elementDiv.style.display === "none") {
+  
+    elementDiv.style.display = "block"; // or "flex", "grid", etc.
+    inEl = true
+  } else {
+ 
+    elementDiv.style.display = "none";
+    inEl = false
+  }
+}
+
     //let ballColor = "#fa0";
     let ballColor = "white";
     let springColor = "gray"
     let readyForBg = false
     //fushcia
     let save = []
-    
+    let drawColor = "white"
     
 	const playBtn = document.getElementById("play");
     
     
     
-    
+    let isSnap = true
+    let isGravity = true
+    let snap = true
 	playBtn.textContent = "Run";
 
     
@@ -249,12 +423,69 @@ input[type="checkbox"] {
     
     
     
+    function changeBallColor() {
+    		
+    }
     
     
     
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    function makeBall(x, y, rad, springs, springDist) {
+    	balls.push({
+                x: x,
+                y: y,
+                xVel: 0,
+                yVel: 0,
+                radias: rad,
+                spring:     e.connect === true ? springs : [],
+                springDist: e.connect ? springDist : [],
+                anchor: e.anchor ? [x, y] : false,
+                color: e.colors[Math.floor(Math.random() * e.colors.length)],
+                el: elements.indexOf(e)
+            });
+    	
+    }
+    
+    function toggleGravity(item) {
+    	isGravity = !isGravity
+       
+        //alert(isGravity)
+        if (isGravity) {
+        
+        	item.textContent = "Gravity ON";
+        } else {
+        	
+        	item.textContent = "Gravity OFF";
+        }
+        
+    }
+    
+    
+    function toggleSnap(item) {
+    	isGravity = !isGravity
+       
+        //alert(isGravity)
+        if (isGravity) {
+        
+        	item.textContent = "Break ON";
+        } else {
+        	
+        	item.textContent = "Break OFF";
+        }
+        
+    }
     
     
     
@@ -318,17 +549,12 @@ makeLine(5, canvas.height - 5, canvas.width - 5, canvas.height - 5)
     let rectY = null
     let ropeX = null
     let ropeY = null
-    let activePointerId = null;
-    canvas.addEventListener('pointerdown', (event) => {
-    if (!event.isPrimary || event.button !== 0) return;
-    activePointerId = event.pointerId;
-    canvas.setPointerCapture(event.pointerId);
+    	document.addEventListener('mousedown', (event) => {
+        if (inEl) {return}
     //if (running) return;
     const rect = canvas.getBoundingClientRect();
     const mouseX = event.clientX - rect.left;
     const mouseY = event.clientY - rect.top;
-
-
 
 
 
@@ -340,6 +566,26 @@ makeLine(5, canvas.height - 5, canvas.width - 5, canvas.height - 5)
         
     } else if (getInput("drawing") === 'point' || getInput("drawing") === 'anchor') {
         if (mouseY < canvas.height - 5 && mouseY > 20) {
+        
+        	makeBall(
+            	mouseX,
+                
+                mouseY,
+                
+            	Number(getInput("slider")),
+                
+                getInput("auto") === true ? isNearBall(mouseX, mouseY, 100) : [],
+                
+                getInput("auto") === true ? isNearBall(mouseX, mouseY, 100, true) : [],
+                
+                
+            
+            
+            ) 
+            
+            
+            
+            /*
             balls.push({
                 x: mouseX,
                 y: mouseY,
@@ -349,7 +595,7 @@ makeLine(5, canvas.height - 5, canvas.width - 5, canvas.height - 5)
                 spring:     getInput("auto") === true ? isNearBall(mouseX, mouseY, 100) : [],
                 springDist: getInput("auto") === true ? isNearBall(mouseX, mouseY, 100, true) : [],
                 anchor: getInput("drawing") === 'anchor' ? [mouseX, mouseY] : false
-            });
+            });*/
         }
     } else if (getInput("drawing") === 'block') {
     	rectX = mouseX
@@ -367,15 +613,13 @@ function run() {
 	running =  !running
     
 }	
-document.addEventListener('pointerup', (event) => {
-    if (event.pointerId !== activePointerId) return;
-    activePointerId = null;
+document.addEventListener('mouseup', (event) => {
+	//if (inEl = true) return
     const rect = canvas.getBoundingClientRect();
     const mouseUpX = event.clientX - rect.left;
     const mouseUpY = event.clientY - rect.top;
 
-
-
+if (inEl) {return}
 
 
 
@@ -416,12 +660,6 @@ document.addEventListener('pointerup', (event) => {
     }
     selected = null;
 });
-canvas.addEventListener('pointercancel', (event) => {
-    if (event.pointerId !== activePointerId) return;
-    activePointerId = null;
-    selected = null;
-});
-document.addEventListener('contextmenu', (event) => event.preventDefault());
 
 
 
@@ -498,11 +736,10 @@ function drawing(what, thing, slider = "none", min = 0, max = 0) {
 		function getInput(input) {
     const xInput = document.getElementById('x-vel').value;
     const yInput = document.getElementById('y-vel').value;
-    const autoInput = document.getElementById('autoMakeLines').checked;
+    const autoInput = true;
     const slider = document.getElementById('slider').value;
-     const gravity = document.getElementById('gravity').checked;
      
-     const snap = document.getElementById('snap').checked;
+     const snap = isSnap;
     //const autoInput = document.getElementById('autoMakeLines').checked;
     
     if (input === "xVel") {
@@ -521,7 +758,7 @@ function drawing(what, thing, slider = "none", min = 0, max = 0) {
     	return slider
     }
     if (input === "gravity") {
-    	return gravity
+    	return isGravity
     }
     if (input === "snap") {
     	return snap
@@ -534,7 +771,7 @@ function drawing(what, thing, slider = "none", min = 0, max = 0) {
         let restitution = 0.99
         let friction = 0.5
         let isSpacePressed = false
-        let DStiffness = 0.5
+        let DStiffness = 0.4
         let gravity = 0.1
         let level = [];
 		let copy = []
@@ -546,6 +783,8 @@ function drawing(what, thing, slider = "none", min = 0, max = 0) {
         function resize(levelIsThere = false) {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight - 130;
+            //elementDiv.width = window.innerWidth;
+            //elementDiv.height = window.innerHeight - 130;
             if (levelIsThere) {
                 
         		level[0] = {x1: 5, y1: canvas.height - 5, x2: window.innerWidth - 5, y2: canvas.height - 5}
@@ -566,10 +805,10 @@ makeLine(5, canvas.height - 5, canvas.width - 5, canvas.height - 5)
 
 
 
-
+let time = 0
 
        function update() {
-       
+       time++
        if (running) {
        		
 			playBtn.textContent = "stop";
@@ -577,7 +816,7 @@ makeLine(5, canvas.height - 5, canvas.width - 5, canvas.height - 5)
 	  		playBtn.textContent = "play";
 		}
        		if (!running) {
-       			
+       			time = 0
     	save = structuredClone(balls);
        		}
        
@@ -604,7 +843,38 @@ makeLine(5, canvas.height - 5, canvas.width - 5, canvas.height - 5)
     for (let b of balls) { 
         for (let s of b.spring) {
             if (balls[s]) {
-                spring(b, balls[s], b.springDist[b.spring.indexOf(s)]);
+                spring(b, balls[s]
+                , b.springDist[b.spring.indexOf(s)], 
+                elements[b.el].stiffness);
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
             }
         }
         b.x += b.xVel;
@@ -630,12 +900,22 @@ makeLine(5, canvas.height - 5, canvas.width - 5, canvas.height - 5)
             b.xVel = 0;
         	b.yVel = 0;
         }
+        
+        	ctx.fillStyle = b.color;
         ctx.beginPath();
         ctx.arc(b.x, b.y, b.radias, 0, 2 * Math.PI, false);
         ctx.fill();
         
         if (!hasTouched && getInput('gravity')) {
-            b.yVel += gravity;
+        	if (elements[b.el].name == "fire") {
+            	
+            	b.yVel += -0.05
+                b.yVel = Math.min(2, b.yVel)
+                b.xVel += Math.sin((time * 50) + balls.indexOf(b) * 143) * 0.2
+                
+            } else {
+            	b.yVel += gravity;
+            }
             //b.xVel += Xgravity;
         }
         
@@ -645,6 +925,39 @@ makeLine(5, canvas.height - 5, canvas.width - 5, canvas.height - 5)
             b.xVel = 0;
         	b.yVel = 0;
         }
+        if (elements[b.el].name === "magnet") {
+    let magnetIDs = isNearBall(b.x, b.y, 200, false, false);
+
+    for (let mbId of magnetIDs) {
+        let mb = balls[mbId];
+        
+        // Prevent the magnet from pulling itself
+        if (mb === b) continue; 
+
+        if (elements[mb.el].name == "magnet") {
+            // 1. Get the X and Y distance components
+            let dx = mb.x - b.x;
+            let dy = mb.y - b.y;
+
+            // 2. Use Math.hypot to get the straight-line distance
+            let mbDist = Math.hypot(dx, dy);
+            
+            // Avoid division by zero if they are perfectly overlapping
+            if (mbDist === 0 || mbDist > 200) continue; 
+
+            // Calculate pull strength (closer = stronger)
+            let pull = (200 - mbDist) * 0.0006; 
+
+            // 3. Find the angle and apply the force
+            let angle = Math.atan2(dy, dx);
+            b.xVel += Math.cos(angle) * pull;
+            b.yVel += Math.sin(angle) * pull;
+        }
+    }
+}
+
+
+
     }
     
     } else {
@@ -661,6 +974,8 @@ makeLine(5, canvas.height - 5, canvas.width - 5, canvas.height - 5)
         } else {
         	ctx.fillStyle = ballColor;
         }
+        
+        	ctx.fillStyle = b.color;
         	 ctx.beginPath();
         ctx.arc(b.x, b.y, b.radias, 0, 2 * Math.PI, false);
         ctx.fill();
@@ -675,6 +990,8 @@ makeLine(5, canvas.height - 5, canvas.width - 5, canvas.height - 5)
         } else {
         	ctx.fillStyle = ballColor;
         }
+        
+        	ctx.fillStyle = b.color;
         	 ctx.beginPath();
         ctx.arc(b.x, b.y, b.radias, 0, 2 * Math.PI, false);
         ctx.fill();
@@ -688,6 +1005,7 @@ makeLine(5, canvas.height - 5, canvas.width - 5, canvas.height - 5)
         }
         function makeRope(x1, y1, x2, y2, gap) {
     const dist = getDistance(x1, y1, x2, y2);
+    if (dist < gap) return
     // Determine how many balls fit in this distance
     const steps = Math.floor(dist / gap);
     
@@ -720,10 +1038,16 @@ makeLine(5, canvas.height - 5, canvas.width - 5, canvas.height - 5)
 
 
 
+		makeBall(
+        	currX, 
+            currY, 
+            ballRadias, 
+        	lastBallIndex === null ?  [isNearBall(ropeX, ropeY, 50, false, true)] : [lastBallIndex], 
+        	(lastBallIndex === null ?  [isNearBall(ropeX, ropeY, 50, true, true)] : [gap]),
+            )
 
 
-
-        const newBall = {
+        /*const newBall = {
             x: currX,
             y: currY,
             xVel: 0,
@@ -733,6 +1057,7 @@ makeLine(5, canvas.height - 5, canvas.width - 5, canvas.height - 5)
             springDist: lastBallIndex === null ?  [isNearBall(ropeX, ropeY, 50, true, true)] : [gap],
             anchor: false
         };
+*/
 
 
 
@@ -740,8 +1065,7 @@ makeLine(5, canvas.height - 5, canvas.width - 5, canvas.height - 5)
 
 
 
-
-        balls.push(newBall);
+        //balls.push(newBall);
         
         // The index of the ball we just added
         const currentIdx = balls.length - 1;
@@ -754,7 +1078,7 @@ makeLine(5, canvas.height - 5, canvas.width - 5, canvas.height - 5)
 
 
         // Link the previous ball to this new ball (bidirectional spring)
-        if (lastBallIndex !== null) {
+        if (lastBallIndex !== null && e.connect) {
             balls[lastBallIndex].spring.push(currentIdx);
             balls[lastBallIndex].springDist.push(gap);
         }
@@ -789,70 +1113,10 @@ makeLine(5, canvas.height - 5, canvas.width - 5, canvas.height - 5)
     let w = Math.round(widthCount);
     let h = Math.round(heightCount);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     for (let row = 0; row <= h; row++) {
         for (let col = 0; col <= w; col++) {
             let px = startX + col * spacing;
             let py = startY + row * spacing;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -863,36 +1127,10 @@ makeLine(5, canvas.height - 5, canvas.width - 5, canvas.height - 5)
 
 
 
+			makeBall(px, py, ballRadias, mySprings, myDists)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            balls.push({
+            /*balls.push({
                 x: px,
                 y: py,
                 xVel: 0,
@@ -901,7 +1139,7 @@ makeLine(5, canvas.height - 5, canvas.width - 5, canvas.height - 5)
                 spring: mySprings,
                 springDist: myDists,
                 anchor: false
-            });
+            });*/
         }
     }
 }
@@ -956,7 +1194,7 @@ makeLine(5, canvas.height - 5, canvas.width - 5, canvas.height - 5)
     return min ? closestOutput : output; 
 }
         function bounce(b, line) {
-        	b.angleVel = b.angleVel ?? -5
+        	b.angleVel = b.angleVel ?? -0.1
             //const normalX = line[4][0]
             //const normalY = line[4][1]
             const normal = getNormal(line.x1, line.y1, line.x2, line.y2)
@@ -990,6 +1228,8 @@ makeLine(5, canvas.height - 5, canvas.width - 5, canvas.height - 5)
     }
 }*/
 		function collideWithBall(ball1, ball2) {
+        let rest =  (elements[ball1.el].restitution + 	                               elements[ball2.el].restitution) / 2
+        //let bounce = 1
         if (!ballsTouch) return;
     if (ball1.xVel === "anchor" && ball2.xVel === "anchor") return;
     const dx = ball1.x - ball2.x;
@@ -1040,7 +1280,7 @@ makeLine(5, canvas.height - 5, canvas.width - 5, canvas.height - 5)
         const relVelY = v1y - v2y;
         const velAlongNormal = (relVelX * nx) + (relVelY * ny);
         if (velAlongNormal > 0) return;
-        const impulse = -(1 + restitution) * velAlongNormal / 2;
+        const impulse = -(1 + rest) * velAlongNormal / 2;
         
         if (ball1.xVel !== "anchor") {
             ball1.xVel += impulse * nx;
@@ -1052,17 +1292,21 @@ makeLine(5, canvas.height - 5, canvas.width - 5, canvas.height - 5)
         }
     }
 }
-        function spring(b1, b2, dist, stiffness = DStiffness, springIndex) {
 
+        function spring(b1, b2, dist, stiffness = false, springIndex) {
 
-
+if (elements[b1.el].sType === 2) {
+	spring2(b1, b2, dist, stiffness)
+	return 
+}
 
 
 
 
 
     const distOfPoints = getDistance(b1.x, b1.y, b2.x, b2.y);
-    const snapThreshold = springSnap;
+    const snapThreshold =  (elements[b1.el].snapAt +
+    				  elements[b2.el].snapAt) / 2;
 	const isHydrolic = hydrolics.some(pair => (pair[0] === b1 && pair[1] === b2) || (pair[0] === b2 && pair[1] === b1));
     const dx = b1.x - b2.x;
     const dy = b1.y - b2.y;
@@ -1078,14 +1322,15 @@ makeLine(5, canvas.height - 5, canvas.width - 5, canvas.height - 5)
 
 
 
+	if (!stiffness) {
+	stiffness = (elements[b1.el].stiffness +
+    		elements[b2.el].stiffness) / 2
 
-
-
-
+}
 
     
     
-    ctx.strokeStyle = isHydrolic ? "blue" : springColor;
+    ctx.strokeStyle = isHydrolic ? "blue" : getSpringColor(b1.color, b2.color, 0.5);
     if (isHydrolic) {
     	stiffness /= 2
         const xOfBig = b1.x - (dx / distOfPoints) * dist / 2;
@@ -1127,21 +1372,162 @@ makeLine(5, canvas.height - 5, canvas.width - 5, canvas.height - 5)
 
 
 
-    const idk = (1 - dist / distOfPoints) / 2 * stiffness;
+    let multiplyer = (1 - (dist / distOfPoints)) / 2 * stiffness;
     
     if (!b1.anchor) {
-        b1.x += -dx * idk;
-        b1.y += -dy * idk;
-        b1.xVel += -dx * idk;
-        b1.yVel += -dy * idk;
+        b1.x += -dx * multiplyer;
+        b1.y += -dy * multiplyer;
+        b1.xVel += (-dx * multiplyer) / 1;
+        b1.yVel += (-dy * multiplyer) / 1;
+        
     }
     if (!b2.anchor) {
-        b2.x += dx * idk;
-        b2.y += dy * idk;
-        b2.xVel += dx * idk;
-        b2.yVel += dy * idk;
+        b2.x += dx * multiplyer;
+        b2.y += dy * multiplyer;
+        b2.xVel += dx * multiplyer / 1;
+        b2.yVel += dy * multiplyer / 1;
     }
 }
+
+
+
+
+
+
+
+
+
+
+function spring2(b1, b2, dist, stiffness, damping = false) {
+	
+    const isHydrolic = hydrolics.some(pair => (pair[0] === b1 && pair[1] === b2) || (pair[0] === b2 && pair[1] === b1));
+    
+    ctx.strokeStyle = isHydrolic ? "blue" : getSpringColor(b1.color, b2.color, 0.5);
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(b1.x, b1.y);
+    ctx.lineTo(b2.x, b2.y);
+    ctx.stroke();
+
+	if (!running) return
+	
+    if (!damping) {
+    	damping = (elements[b1.el].damping +
+    				  elements[b2.el].damping) / 2
+    }
+    
+    let springIndex = b1.spring.indexOf(balls.indexOf(b2))
+    
+    
+    
+
+    let dx = b2.x - b1.x;
+    let dy = b2.y - b1.y;
+    
+    
+    let len = Math.sqrt(dx * dx + dy * dy);
+    
+    
+   
+    
+	let ballSnapAt = (elements[b1.el].snapAt +
+    				  elements[b2.el].snapAt) / 2
+    
+    
+    
+    
+  if (len > dist * ballSnapAt || len < dist * (1 / ballSnapAt)) {
+    	if (!isHydrolic) {
+        	if (isSnap) {
+        		b1.spring.splice(springIndex, 1);
+        		b1.springDist.splice(springIndex, 1);
+        		return;
+            }
+        }
+  }
+    
+    
+    
+    
+    if (len === 0) return
+    const force = stiffness * (len - dist);
+    
+    
+    const fx = force * (dx / len);
+    const fy = force * (dy / len);
+    
+    
+    const rxvel = b2.xVel - b1.xVel;
+    const ryvel = b2.yVel - b1.yVel; 
+    
+    
+    const totalFx = fx + (damping * rxvel);
+    const totalFy = fy + (damping * ryvel);
+    
+    
+    
+     const m1 = b1.radius || 1; 
+    const m2 = b2.radius || 1; 
+    
+    
+    b1.xVel += (totalFx / m1);
+    b1.yVel += (totalFy / m1);
+    
+
+    b2.xVel -= (totalFx / m2);
+    b2.yVel -= (totalFy / m2);
+ 
+	//TODO add mass to each ball   
+    //b1.xVel += (totalFx / b2.radias) * dt;
+    //b1.yVel += (totalFy / b2.radias) * dt;
+
+    
+ //   b2.xVel -= (totalFx / b2.radias) * dt;
+  //  b2.yVel -= (totalFy / b2.radias) * dt;
+    
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+function getSpringColor(color1, color2, darkenFactor = 0.2) {
+    const ctx = document.createElement('canvas').getContext('2d');
+    
+    ctx.fillStyle = color1;
+    const c1Str = ctx.fillStyle;
+    ctx.fillStyle = color2;
+    const c2Str = ctx.fillStyle;
+    
+    const r1 = parseInt(c1Str.slice(1, 3), 16);
+    const g1 = parseInt(c1Str.slice(3, 5), 16);
+    const b1 = parseInt(c1Str.slice(5, 7), 16);
+    
+    const r2 = parseInt(c2Str.slice(1, 3), 16);
+    const g2 = parseInt(c2Str.slice(3, 5), 16);
+    const b2 = parseInt(c2Str.slice(5, 7), 16);
+    
+    const avgR = Math.round((r1 + r2) / 2);
+    const avgG = Math.round((g1 + g2) / 2);
+    const avgB = Math.round((b1 + b2) / 2);
+    
+    const darkR = Math.max(0, Math.round(avgR * (1 - darkenFactor)));
+    const darkG = Math.max(0, Math.round(avgG * (1 - darkenFactor)));
+    const darkB = Math.max(0, Math.round(avgB * (1 - darkenFactor)));
+    
+    return "#" + ((1 << 24) + (darkR << 16) + (darkG << 8) + darkB).toString(16).slice(1);
+}
+
+
+
 
 
 
@@ -1207,6 +1593,11 @@ makeLine(5, canvas.height - 5, canvas.width - 5, canvas.height - 5)
             	fullscrean()
             }
             
+            if (event.key === 'e') {
+            	
+    openElements() 
+				
+            }
    		 
           
 });
@@ -1404,17 +1795,19 @@ friction: 1, restitution: 0, springSnap: 5, stiffness: 0.99999, gravity: 0.2,
   ctx.lineTo(canvas.width - 60, canvas.height - 80);
   ctx.moveTo(canvas.width - 170, canvas.height - 50);
   ctx.lineTo(canvas.width - 30, canvas.height - 50);
-  ctx.stroke();
+  ctx.stroke(); 
   ctx.lineCap = "butt";
   
   }
   }
 
 }
-      //test
+      
     </script>
 </body> 
 </html>
+
+
 
 
 
